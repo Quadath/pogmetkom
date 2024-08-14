@@ -38,6 +38,11 @@ const NewStaffScene = new Scenes.WizardScene("NEW_STAFF_SCENE",
       .resize()
     )
     return ctx.wizard.next();
+  },
+  (ctx) => {
+    switch(ctx.message.text) {
+      case 'Назад': ctx.scene.enter('MAIN_SCENE')
+    }
   }
 )
 
