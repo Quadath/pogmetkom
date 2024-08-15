@@ -30,7 +30,9 @@ const MainScene = new Scenes.WizardScene('MAIN_SCENE',
     switch(ctx.message.text) {
       case 'Памятка нового сотрудника': ctx.scene.enter('NEW_STAFF_SCENE'); break;
       case 'Инструктаж по Охране Труда': ctx.scene.enter('EMPTY_SCENE'); break;
+      case 'Регламенты': ctx.scene.enter('EMPTY_SCENE'); break;
       case 'Кайдзен': ctx.scene.enter("KAIDZEN_SCENE"); break;
+      case 'Результаты': ctx.scene.enter("EMPTY_SCENE"); break;
       default: ctx.scene.enter('MAIN_SCENE')
     }
   }
@@ -65,7 +67,7 @@ const NewStaffScene = new Scenes.WizardScene("NEW_STAFF_SCENE",
         await ctx.sendDocument(`${FILES["1.1.4"]}`)
       } break;
       case 'Назад': ctx.scene.enter('MAIN_SCENE'); break;
-
+      case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;
       default: ctx.scene.enter('MAIN_SCENE')
     }
   }
@@ -74,13 +76,15 @@ const NewStaffScene = new Scenes.WizardScene("NEW_STAFF_SCENE",
 //1.4
 const KaidzenScene = new Scenes.WizardScene("KAIDZEN_SCENE", 
   (ctx) => {
-    ctx.reply(`${MESSAGES.KAIDZEN}`, Markup
+    ctx.reply(`${MESSAGES.KAIDZEN}`, {
+      parse_mode: 'HTML',
+      ...Markup
       .keyboard([
         ['В начало', 'Назад']
       ])
       .oneTime()
       .resize()
-    )
+  })
     return ctx.wizard.next()
   },
   (ctx) => {
