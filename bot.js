@@ -5,7 +5,7 @@ require('dotenv').config()
 const bot = new Telegraf(process.env.TOKEN)
 bot.launch()
 
-
+//1
 const MainScene = new Scenes.WizardScene('MAIN_SCENE',
   (ctx) => {
     ctx.reply('Выберите подходящую опцию ниже.', Markup
@@ -26,6 +26,7 @@ const MainScene = new Scenes.WizardScene('MAIN_SCENE',
     }
   }
 )
+//1.1
 const NewStaffScene = new Scenes.WizardScene("NEW_STAFF_SCENE", 
   (ctx) => {
     ctx.reply('Памятка нового сотрудника', Markup
@@ -42,9 +43,13 @@ const NewStaffScene = new Scenes.WizardScene("NEW_STAFF_SCENE",
   (ctx) => {
     switch(ctx.message.text) {
       case 'Назад': ctx.scene.enter('MAIN_SCENE')
+
+      default: ctx.scene.enter('MAIN_SCENE')
     }
   }
 )
+
+
 
 const stage = new Scenes.Stage([MainScene, NewStaffScene])
 
