@@ -1,10 +1,12 @@
 const { Telegraf, Markup, Stage, Scenes, session } = require('telegraf')
-const MESSAGES = require('./messages')
-const FILES = require('./files.js')
 
 const MainScene = require('./scenes/1 Main Scene/index.js')
 
 const NewStaffScene = require('./scenes/1.1 New Staff/index.js')
+
+const LaborProtectionScene = require('./scenes/1.2 Labor Protection Briefing/index.js')
+const LPEducationScene = require('./scenes/1.2 Labor Protection Briefing/1.2.1 LP Education/index.js')
+
 const KaidzenScene = require('./scenes/1.4 Kaidzen/index.js')
 const EmptyScene = require('./scenes/0 Empty Scene/index.js')
 
@@ -17,7 +19,9 @@ bot.on((ctx) => {
   console.log(ctx.message)
 })
 
-const stage = new Scenes.Stage([MainScene, NewStaffScene, KaidzenScene, EmptyScene])
+const stage = new Scenes.Stage([MainScene, NewStaffScene, 
+  LaborProtectionScene, LPEducationScene,
+  KaidzenScene, EmptyScene])
 
 bot.use(session())
 bot.use(stage.middleware())
