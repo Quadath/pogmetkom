@@ -1,13 +1,10 @@
 const { Markup, Scenes } = require('telegraf')
 
-const LPEducationScene = require('./1.2.1 LP Education/index')
-
 const LaborProtectionScene = new Scenes.WizardScene("LABOR_PROTECTION_SCENE", 
     (ctx) => {
-      ctx.reply('Инструктаж по Охране Труда', Markup
+      ctx.reply('На рабочем месте', Markup
         .keyboard([
-          ['Обучение ОТ'], 
-          ['Вводный'],
+          ['Обучение ОТ', 'Вводный'], 
           ['На рабочем месте'],
           ['В начало', 'Назад']
         ])
@@ -25,7 +22,7 @@ const LaborProtectionScene = new Scenes.WizardScene("LABOR_PROTECTION_SCENE",
             ctx.scene.enter('INTRODUCTORY_BRIEFING_SCENE')
         } break;    
         case 'На рабочем месте': {
-
+          ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE')
         } break;
         case 'Назад': ctx.scene.enter('MAIN_SCENE'); break;
         case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;

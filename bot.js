@@ -7,6 +7,7 @@ const NewStaffScene = require('./scenes/1.1 New Staff/index.js')
 const LaborProtectionScene = require('./scenes/1.2 Labor Protection Briefing/index.js')
 const LPEducationScene = require('./scenes/1.2 Labor Protection Briefing/1.2.1 LP Education/index.js')
 const IntroductoryBriefingScene = require('./scenes/1.2 Labor Protection Briefing/1.2.2 Introductory Briefing/index.js')
+const BriefingAtTheWorkplaceScene = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/index.js')
 
 const ORDERS_SCENE = require('./scenes/1.3 Orders/index.js')
 
@@ -23,7 +24,7 @@ bot.on((ctx) => {
 })
 
 const stage = new Scenes.Stage([MainScene, NewStaffScene, 
-  LaborProtectionScene, LPEducationScene, IntroductoryBriefingScene,
+  LaborProtectionScene, LPEducationScene, IntroductoryBriefingScene, BriefingAtTheWorkplaceScene,
   ORDERS_SCENE,
   KaidzenScene, EmptyScene])
 

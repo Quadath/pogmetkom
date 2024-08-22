@@ -1,11 +1,11 @@
 const { Markup, Scenes } = require('telegraf')
 
-const Snippet = new Scenes.WizardScene("NAME", 
+const BriefingAtTheWorkplaceScene = new Scenes.WizardScene("BRIEFING_AT_THE_WORKPLACE_SCENE", 
     (ctx) => {
-      ctx.reply('msg', Markup
+      ctx.reply('На рабочем месте', Markup
         .keyboard([
-          ['btn'], 
-          ['btn'],
+          ['Инструкции'], 
+          ['Режим обучения', 'Сдача экзамена'],
           ['В начало', 'Назад']
         ])
         .oneTime()
@@ -15,19 +15,20 @@ const Snippet = new Scenes.WizardScene("NAME",
     },
     (ctx) => {
       switch(ctx.message.text) {
-        case '1111': {
-        } break;
-        case '2222': {
+        case 'Инструкции': {
 
         } break;
-        case '333': {
+        case 'Режим обучения': {
 
         } break;
-        case 'Назад': ctx.scene.enter('SCENE'); break;
+        case 'Сдача экзамена': {
+
+        } break;
+        case 'Назад': ctx.scene.enter('LABOR_PROTECTION_SCENE'); break;
         case 'В начало': ctx.scene.enter('SCENE'); break;
         default: ctx.scene.enter('SCENE')
       }
     }
   )
 
-module.exports = LaborProtectionScene
+module.exports = BriefingAtTheWorkplaceScene
