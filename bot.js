@@ -22,6 +22,7 @@ bot.on((ctx) => {
 const stage = new Scenes.Stage([MainScene, NewStaffScene, 
   LaborProtectionScene, LPEducationScene,
   KaidzenScene, EmptyScene])
+  
 
 bot.use(session())
 bot.use(stage.middleware())
