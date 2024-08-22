@@ -22,8 +22,8 @@ const LaborProtectionScene = new Scenes.WizardScene("LABOR_PROTECTION_SCENE",
             ctx.scene.enter('LP_EDUCATION_SCENE')
         } break;
         case 'Вводный': {
-
-        } break;
+            ctx.scene.enter('INTRODUCTORY_BRIEFING_SCENE')
+        } break;    
         case 'На рабочем месте': {
 
         } break;
