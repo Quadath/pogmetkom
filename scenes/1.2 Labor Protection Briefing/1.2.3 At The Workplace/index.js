@@ -16,7 +16,7 @@ const BriefingAtTheWorkplaceScene = new Scenes.WizardScene("BRIEFING_AT_THE_WORK
     (ctx) => {
       switch(ctx.message.text) {
         case 'Инструкции': {
-
+          ctx.scene.enter('INSTRUCTIONS_SCENE')
         } break;
         case 'Режим обучения': {
 

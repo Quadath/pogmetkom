@@ -2,7 +2,7 @@ const { Markup, Scenes } = require('telegraf')
 
 const FILES = require('../../files.js')
 
-const ORDERS_SCENE = new Scenes.WizardScene("ORDERS_SCENE", 
+const OrdersScene = new Scenes.WizardScene("ORDERS_SCENE", 
     (ctx) => {
       ctx.reply('Регламенты', Markup
         .keyboard([
@@ -30,4 +30,4 @@ const ORDERS_SCENE = new Scenes.WizardScene("ORDERS_SCENE",
     }
   )
 
-module.exports = ORDERS_SCENE
+module.exports = OrdersScene

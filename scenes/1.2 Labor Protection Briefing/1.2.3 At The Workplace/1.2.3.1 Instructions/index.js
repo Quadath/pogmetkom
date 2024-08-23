@@ -1,8 +1,9 @@
 const { Markup, Scenes } = require('telegraf')
 
-const names = ['Механик', 'Грузчик', 'Стекольщик', 'Сборщик', 'Станочник', 'Сварщик', 'Маляр']
+const INSTRUCTIONS = require('../../../../instructions.js')
+const FILES = require('../../../../files.js')
 
-const INSTRUCTIONS_SCENE = new Scenes.WizardScene("INSTRUCTIONS_SCENE", 
+const InstructionsScene = new Scenes.WizardScene("INSTRUCTIONS_SCENE", 
     (ctx) => {
       ctx.reply('Инструкции', Markup
         .keyboard([
@@ -15,35 +16,24 @@ const INSTRUCTIONS_SCENE = new Scenes.WizardScene("INSTRUCTIONS_SCENE",
       )
       return ctx.wizard.next();
     },
-    (ctx) => {
-        console.log(names.findIndex((item) => item === ctx.message.text))
-      switch(ctx.message.text) {
-        case 'Механик': {
+    async (ctx) => {
+      const index = Object.keys(INSTRUCTIONS).findIndex((item) => item == ctx.message.text)
+      console.log(index)
+      if (index >= 0) {
+        const numbers = INSTRUCTIONS[`${ctx.message.text}`];
 
-        } break;
-        case 'Грузчик': {
-
-        } break;
-        case 'Стекольщик': {
-
-        } break;
-        case 'Сборщик': {
-
-        } break;
-        case 'Станочник': {
-
-        } break;
-        case 'Сварщик': {
-
-        } break;
-        case 'Маляр': {
-
-        } break;
-        case 'Назад': ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE'); break;
-        case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;
-        default: ctx.scene.enter('MAIN_SCENE')
+        for (num of numbers) {
+          await ctx.sendDocument(FILES[`1.2.3.1.${num}`])
+        }
+      }
+      else {
+        switch(ctx.message.text) {
+          case 'Назад': ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE'); break;
+          case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;
+          default: ctx.scene.enter('MAIN_SCENE')
+        }
       }
     }
   )
 
-module.exports = INSTRUCTIONS_SCENE
+module.exports = InstructionsScene
