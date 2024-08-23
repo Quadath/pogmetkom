@@ -18,10 +18,10 @@ const IntroductoryBriefingScene = new Scenes.WizardScene("INTRODUCTORY_BRIEFING_
     (ctx) => {
       switch(ctx.message.text) {
         case 'Общие вопросы ОТ': {
-          ctx.scene.enter('EMPTY_SCENE')
+          ctx.sendVideo(`${FILES['1.2.2.1']}`)
         } break;
         case 'ДИ': {
-          ctx.scene.enter('EMPTY_SCENE')
+          ctx.scene.enter('JOB_INSTRUCTIONS_SCENE')
         } break;
         case 'Видео': {
           ctx.sendVideo(`${FILES['1.2.2.3']}`)
