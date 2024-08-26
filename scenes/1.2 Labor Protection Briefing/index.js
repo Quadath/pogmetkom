@@ -2,7 +2,7 @@ const { Markup, Scenes } = require('telegraf')
 
 const LaborProtectionScene = new Scenes.WizardScene("LABOR_PROTECTION_SCENE", 
     (ctx) => {
-      ctx.reply('На рабочем месте', Markup
+      ctx.reply('Инструктаж по Охране труда', Markup
         .keyboard([
           ['Обучение ОТ', 'Вводный'], 
           ['На рабочем месте'],

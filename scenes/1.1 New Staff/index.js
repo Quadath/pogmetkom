@@ -19,15 +19,19 @@ const NewStaffScene = new Scenes.WizardScene("NEW_STAFF_SCENE",
       switch(ctx.message.text) {
         case 'Контакты': {
           await ctx.sendDocument(`${FILES["1.1.1"]}`)
+          ctx.scene.enter("NEW_STAFF_SCENE")
         } break;
         case 'О компании': {
           await ctx.sendDocument(`${FILES["1.1.2"]}`)
+          ctx.scene.enter("NEW_STAFF_SCENE")
         } break;
         case 'Оплата труда': {
           await ctx.sendDocument(`${FILES["1.1.3"]}`)
+          ctx.scene.enter("NEW_STAFF_SCENE")
         } break;
         case 'Наши правила': {
           await ctx.sendDocument(`${FILES["1.1.4"]}`)
+          ctx.scene.enter("NEW_STAFF_SCENE")
         } break;
         case 'Назад': ctx.scene.enter('MAIN_SCENE'); break;
         case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;
