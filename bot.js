@@ -2,6 +2,8 @@ const { Telegraf, Markup, Stage, Scenes, session } = require('telegraf')
 const mongoose = require('mongoose')
 const express = require('express')
 const bodyParser = require('body-parser')
+require('dotenv').config()
+
 
 const app = express()
 const InstructionsRouter = require('./routes/InstructionsRouter.js')
@@ -23,9 +25,8 @@ const OrdersScene = require('./scenes/1.3 Orders/index.js')
 const KaidzenScene = require('./scenes/1.4 Kaidzen/index.js')
 const EmptyScene = require('./scenes/0 Empty Scene/index.js')
 
-mongoose.connect('mongodb://127.0.0.1:27017/pogmetkom').then(() => console.log('connected to MongoDB'))
 
-require('dotenv').config()
+mongoose.connect(process.env.MONGO_URI).then(() => console.log('Connected to MongoDB'))
 
 const bot = new Telegraf(process.env.TOKEN)
 bot.launch()
@@ -48,7 +49,7 @@ bot.use(stage.middleware())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use('/instructions', InstructionsRouter)
-app.listen(3000, () => {
+app.listen(process.env.EXPRESS_PORT, () => {
   console.log('Express server started successfully')
 })
 
