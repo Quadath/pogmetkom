@@ -73,7 +73,6 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
         }
 
       }
-      console.log(ctx.session.state.questions.length)
 
       if (ctx.session.state.counter < ctx.session.state.questions.length) {
         ctx.reply(`${ctx.session.state.questions[ctx.session.state.counter].text}
@@ -94,11 +93,11 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
         return ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE')
       }
 
-      console.log({
-        counter: ctx.session.state.counter,
-        score: ctx.session.state.score,
-        questions: ctx.session.state.questions.length
-      })
+      // console.log({
+      //   counter: ctx.session.state.counter,
+      //   score: ctx.session.state.score,
+      //   questions: ctx.session.state.questions.length
+      // })
       ctx.session.state.counter++
       ctx.wizard.selectStep(2)
     }
