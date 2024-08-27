@@ -3,10 +3,12 @@ const InstructionsSchema = require('../../../../models/instruction.js')
 const shuffle = require('../../../../shuffle.js')
 
 const INSTRUCTIONS = require('../../../../instructions.js')
-const TestingScenes = []
+const letters = ["А", "Б", "В", "Г"]
 
 let questions = [];
 let counter = 0;
+let score = 0;
+
 const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE", 
     (ctx) => {
         ctx.reply('Режим обучения', Markup
@@ -30,58 +32,69 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
         .oneTime()
         .resize()
       )
-      const documents = await InstructionsSchema.find({number: {$in: numbers}})
+      const documents = await InstructionsSchema.find({number: {$in: numbers}}).lean()
+
       questions = shuffle(documents.flatMap((item) => {
-        return shuffle(
-          shuffle(item.questions.answers)
-        )
+        return item.questions.map((question) => {
+          return {
+            text: question.text,
+            answers: shuffle(question.answers)
+          }
+        })
       }))
-      console.log(questions)
-      if (numbers == undefined) {
-        switch(ctx.message.text) {
-          case 'Назад': ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE'); break;
-          case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;
-          default: ctx.scene.enter('MAIN_SCENE')
-        }
+      switch(ctx.message.text) {
+        case 'Назад': ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE'); break;
+        case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;
       }
       return ctx.wizard.next();
     },
-    (ctx) => 
+    async (ctx) => 
     {
-      ctx.reply(questions[counter].text, Markup
-        .keyboard([
-          ['А', 'Б'],
-          ['В', '']
-        ])
-        .oneTime()
-        .resize()
-      )
-      ctx.wizard.next()
-      // ctx.wizard.steps[2](ctx)
-    },
-    (ctx) => {
+      switch(ctx.message.text) {
+        case 'Назад': return ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE'); break;
+        case 'В начало': return ctx.scene.enter('MAIN_SCENE'); break;
+      }
+      const index = letters.findIndex(item => item == ctx.message.text)
+      if(counter > 0 && counter < questions.length) {
+        if(questions[counter - 1].answers[index]?.correct) {
+          score++;
+          ctx.react('👍')
+        } else
+        {
+          ctx.react('👎')
+          const index = questions[counter-1].answers.findIndex((item) => item?.correct == true)
+          const answer = questions[counter-1].answers[index].text
+          ctx.sendMessage(`<u><b>Неверно.</b></u> \n${letters[index]}) ${answer}`, {parse_mode: 'HTML'})
+          await new Promise(r => setTimeout(r, 1500))
+        }
 
+      }
+      if (counter < questions.length) {
+        ctx.reply(`${questions[counter].text}
+          \n${questions[counter].answers.map((item, index) => `${letters[index]}) ${item.text}`).join('\n\n')}`, {
+          parse_mode: 'HTML',
+          ...Markup
+          .keyboard([
+            ['А', 'Б'],
+            [`${questions[counter].answers.length >= 3 ? 'В' : ''}`, `${questions[counter].answers.length >= 4 ? 'Г' : ''}`]
+          ])
+        })   
+      }
+      if (counter >= questions.length) {
+        console.log(`end. score:${score}`)
+        ctx.reply(`Ваш результат ${score/questions.length}%`)
+        return ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE')
+      }
+
+      console.log({
+        counter,
+        score,
+        questions: questions.length
+      })
       counter++;
-      ctx.wizard.steps[2](ctx)
+      ctx.wizard.selectStep(2)
     }
   )
 
-async function SceneGen(numbers) {
-
-  const documents = await InstructionsSchema.find({number: {$in: numbers}})
-  const questions = documents.flatMap((item) => {
-    return item.questions
-  })
-
-  const scenes = questions.map((item) => {
-    return (ctx) => {
-      console.log('hi')
-      ctx.reply(item.text)
-      return ctx.wizard.next();
-    }
-  })
-  console.log(scenes[0])
-  return scenes
-}
 
 module.exports = TrainingModeScene

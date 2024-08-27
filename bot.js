@@ -31,9 +31,9 @@ mongoose.connect(process.env.MONGO_URI).then(() => console.log('Connected to Mon
 const bot = new Telegraf(process.env.TOKEN)
 bot.launch()
 
-bot.on((ctx) => {
-  console.log(ctx.message)
-})
+// bot.on((ctx) => {
+//   console.log(ctx.message)
+// })
 
 const stage = new Scenes.Stage([MainScene, NewStaffScene, 
   LaborProtectionScene, LPEducationScene, 
