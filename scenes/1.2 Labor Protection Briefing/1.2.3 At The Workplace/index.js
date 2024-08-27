@@ -30,5 +30,5 @@ const BriefingAtTheWorkplaceScene = new Scenes.WizardScene("BRIEFING_AT_THE_WORK
       }
     }
   )
-
+  
 module.exports = BriefingAtTheWorkplaceScene

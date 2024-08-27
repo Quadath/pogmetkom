@@ -6,8 +6,6 @@ const INSTRUCTIONS = require('../../../../instructions.js')
 const letters = ["А", "Б", "В", "Г"]
 
 let questions = [];
-let counter = 0;
-let score = 0;
 
 const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE", 
     (ctx) => {
@@ -34,7 +32,7 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
       )
       const documents = await InstructionsSchema.find({number: {$in: numbers}}).lean()
 
-      questions = shuffle(documents.flatMap((item) => {
+      const questions = shuffle(documents.flatMap((item) => {
         return item.questions.map((question) => {
           return {
             text: question.text,
@@ -42,6 +40,11 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
           }
         })
       }))
+      ctx.session.state = {
+        counter: 0,
+        score: 0,
+        questions
+      }
       switch(ctx.message.text) {
         case 'Назад': ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE'); break;
         case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;
@@ -54,44 +57,49 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
         case 'Назад': return ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE'); break;
         case 'В начало': return ctx.scene.enter('MAIN_SCENE'); break;
       }
-      const index = letters.findIndex(item => item == ctx.message.text)
-      if(counter > 0 && counter < questions.length) {
-        if(questions[counter - 1].answers[index]?.correct) {
-          score++;
+      
+      if(ctx.session.state.counter > 0 && ctx.session.state.counter < ctx.session.state.questions.length) {
+        const i = letters.findIndex(item => item == ctx.message.text)
+        if(ctx.session.state.questions[ctx.session.state.counter - 1].answers[i]?.correct) {
+          ctx.session.state.score++
           ctx.react('👍')
         } else
         {
           ctx.react('👎')
-          const index = questions[counter-1].answers.findIndex((item) => item?.correct == true)
-          const answer = questions[counter-1].answers[index].text
+          const index = ctx.session.state.questions[ctx.session.state.counter-1].answers.findIndex((item) => item?.correct == true)
+          const answer = ctx.session.state.questions[ctx.session.state.counter-1].answers[index].text
           ctx.sendMessage(`<u><b>Неверно.</b></u> \n${letters[index]}) ${answer}`, {parse_mode: 'HTML'})
           await new Promise(r => setTimeout(r, 1500))
         }
 
       }
-      if (counter < questions.length) {
-        ctx.reply(`${questions[counter].text}
-          \n${questions[counter].answers.map((item, index) => `${letters[index]}) ${item.text}`).join('\n\n')}`, {
+      console.log(ctx.session.state.questions.length)
+
+      if (ctx.session.state.counter < ctx.session.state.questions.length) {
+        ctx.reply(`${ctx.session.state.questions[ctx.session.state.counter].text}
+          \n${ctx.session.state.questions[ctx.session.state.counter].answers.map((item, index) => `${letters[index]}) ${item.text}`).join('\n\n')}`, {
           parse_mode: 'HTML',
           ...Markup
           .keyboard([
             ['А', 'Б'],
-            [`${questions[counter].answers.length >= 3 ? 'В' : ''}`, `${questions[counter].answers.length >= 4 ? 'Г' : ''}`]
+            [`${ctx.session.state.questions[ctx.session.state.counter].answers.length >= 3 ? 'В' : ''}`, `${ctx.session.state.questions[ctx.session.state.counter].answers.length >= 4 ? 'Г' : ''}`]
           ])
         })   
       }
-      if (counter >= questions.length) {
-        console.log(`end. score:${score}`)
-        ctx.reply(`Ваш результат ${score/questions.length}%`)
+      if (ctx.session.state.counter >= ctx.session.state.questions.length) {
+       
+        console.log(`end. score:${ctx.session.state.score}`)
+        ctx.reply(`Ваш результат ${parseFloat(ctx.session.state.score/ctx.session.state.questions.length * 100).toFixed(2)}%`)
+        await new Promise(r => setTimeout(r, 1500))
         return ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE')
       }
 
       console.log({
-        counter,
-        score,
-        questions: questions.length
+        counter: ctx.session.state.counter,
+        score: ctx.session.state.score,
+        questions: ctx.session.state.questions.length
       })
-      counter++;
+      ctx.session.state.counter++
       ctx.wizard.selectStep(2)
     }
   )
