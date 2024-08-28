@@ -25,8 +25,8 @@ const BriefingAtTheWorkplaceScene = new Scenes.WizardScene("BRIEFING_AT_THE_WORK
           ctx.scene.enter('EMPTY_SCENE')
         } break;
         case 'Назад': ctx.scene.enter('LABOR_PROTECTION_SCENE'); break;
-        case 'В начало': ctx.scene.enter('SCENE'); break;
-        default: ctx.scene.enter('SCENE')
+        case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;
+        default: ctx.scene.enter('MAIN_SCENE')
       }
     }
   )
