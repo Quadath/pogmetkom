@@ -5,8 +5,6 @@ const shuffle = require('../../../../shuffle.js')
 const INSTRUCTIONS = require('../../../../instructions.js')
 const letters = ["А", "Б", "В", "Г"]
 
-let questions = [];
-
 const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE", 
     (ctx) => {
         ctx.reply('Режим обучения', Markup
@@ -21,6 +19,8 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
         return ctx.wizard.next();
     },
     async (ctx) => {
+      const i = Object.keys(INSTRUCTIONS).findIndex((item) => item == ctx.message.text)
+      if (i < 0) return ctx.scene.reenter()
       const numbers = INSTRUCTIONS[`${ctx.message.text}`]
       ctx.reply(`Тест на должность ${ctx.message.text}`, Markup
         .keyboard([
@@ -41,9 +41,10 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
         })
       }))
       ctx.session.state = {
+        ...ctx.session.state,
         counter: 0,
         score: 0,
-        questions
+        questions,
       }
       switch(ctx.message.text) {
         case 'Назад': ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE'); break;
@@ -73,7 +74,7 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
         }
 
       }
-
+      console.log(ctx.session.state)
       if (ctx.session.state.counter < ctx.session.state.questions.length) {
         ctx.reply(`${ctx.session.state.questions[ctx.session.state.counter].text}
           \n${ctx.session.state.questions[ctx.session.state.counter].answers.map((item, index) => `${letters[index]}) ${item.text}`).join('\n\n')}`, {
@@ -86,18 +87,11 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
         })   
       }
       if (ctx.session.state.counter >= ctx.session.state.questions.length) {
-       
-        console.log(`end. score:${ctx.session.state.score}`)
         ctx.reply(`Ваш результат ${parseFloat(ctx.session.state.score/ctx.session.state.questions.length * 100).toFixed(2)}%`)
         await new Promise(r => setTimeout(r, 1500))
         return ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE')
       }
 
-      // console.log({
-      //   counter: ctx.session.state.counter,
-      //   score: ctx.session.state.score,
-      //   questions: ctx.session.state.questions.length
-      // })
       ctx.session.state.counter++
       ctx.wizard.selectStep(2)
     }
