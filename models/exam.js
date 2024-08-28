@@ -8,7 +8,8 @@ const ExamSchema = new mongoose.Schema({
     result: {
         type: Number,
         required: true
-    }
+    },
+    time: Number
 })
 
 module.exports = mongoose.model('Exam', ExamSchema)

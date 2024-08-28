@@ -22,7 +22,7 @@ const JobInstructionsScene = require('./scenes/1.2 Labor Protection Briefing/1.2
 const BriefingAtTheWorkplaceScene = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/index.js')
 const InstructionsScene = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/1.2.3.1 Instructions/index.js')
 const TrainingModeScene = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/1.2.3.2 Training Mode/index.js')
-const {NewUserExamScene, ExamScene, NameChangeScene} = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/1.2.3.3 Exam/index.js')
+const {NewUserExamScene, ExamScene, NameChangeScene, JobChangeScene} = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/1.2.3.3 Exam/index.js')
 
 const OrdersScene = require('./scenes/1.3 Orders/index.js')
 
@@ -47,7 +47,7 @@ bot.on(async (ctx) => {
 const stage = new Scenes.Stage([MainScene, NewStaffScene, 
   LaborProtectionScene, LPEducationScene, 
   IntroductoryBriefingScene, JobInstructionsScene,
-  BriefingAtTheWorkplaceScene, InstructionsScene, TrainingModeScene, NewUserExamScene, ExamScene, NameChangeScene,
+  BriefingAtTheWorkplaceScene, InstructionsScene, TrainingModeScene, NewUserExamScene, ExamScene, NameChangeScene, JobChangeScene,
   OrdersScene,
   KaidzenScene, EmptyScene])
 
@@ -67,10 +67,11 @@ bot.start((ctx) => {
   ctx.session.state = {
     user: {
       name: undefined,
-      job: undefined
+      job: undefined,
     },
     counter: 0, 
     score: 0,
+    timer: 0,
     questions: []
   }
 })
