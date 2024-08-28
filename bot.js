@@ -3,6 +3,8 @@ const Mongo  = require("@telegraf/session/mongodb");
 const mongoose = require('mongoose')
 const express = require('express')
 const bodyParser = require('body-parser')
+const Logger = require('./models/log.js')
+const MessageSchema = require('./models/message.js')
 require('dotenv').config()
 
 
@@ -32,8 +34,13 @@ mongoose.connect(process.env.MONGO_URI).then(() => console.log('Connected to Mon
 const bot = new Telegraf(process.env.TOKEN)
 bot.launch()
 
-bot.on((ctx) => {
-  console.log(ctx.message)
+bot.on(async (ctx) => {
+  // console.log(ctx.message)
+  const log = new Logger({...ctx.message})
+  await log.save()
+  if(ctx.message?.text) {
+    await MessageSchema.findOneAndUpdate({text: ctx.message.text}, {$inc: {quantity: 1, "times": 1}}, {upsert: true})
+  }
 })
 
 const stage = new Scenes.Stage([MainScene, NewStaffScene, 
