@@ -33,6 +33,7 @@ const NewUserExamScene = new Scenes.WizardScene("NEW_USER_EXAM_SCENE",
         const i = Object.keys(INSTRUCTIONS).findIndex((item) => item == ctx.message.text)
         if (i < 0) return ctx.wizard.selectStep(1)
         await UserSchema.findOneAndUpdate({telegramId: ctx.message.from.id}, {job: Object.keys(INSTRUCTIONS)[i]})
+        ctx.session.state.user.job = Object.keys(INSTRUCTIONS)[i]
         ctx.scene.enter('EXAM_SCENE')
     }
   )
@@ -100,7 +101,6 @@ const ExamScene = new Scenes.WizardScene("EXAM_SCENE",
                 result,
                 time: ((new Date().getTime() - ctx.session.state.timer) / 1000)
             })
-            console.log(exam)
             await exam.save()
             let message = ``
             if (result > 90) {

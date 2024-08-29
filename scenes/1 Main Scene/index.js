@@ -25,7 +25,13 @@ const MainScene = new Scenes.WizardScene('MAIN_SCENE',
         case 'Инструктаж по Охране Труда': ctx.scene.enter('LABOR_PROTECTION_SCENE'); break;
         case 'Регламенты': ctx.scene.enter('ORDERS_SCENE'); break;
         case 'Кайдзен': ctx.scene.enter("KAIDZEN_SCENE"); break;
-        case 'Результаты': ctx.scene.enter("EMPTY_SCENE"); break;
+        case 'Результаты': {
+          if (ctx.session.state.op) {
+            ctx.scene.enter("ADMINISTRATION_SCENE")
+          } else {
+            ctx.scene.enter("GUARD_SCENE");
+          }
+         } break;
         default: ctx.scene.enter('MAIN_SCENE')
       }
     }

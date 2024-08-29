@@ -1,5 +1,4 @@
 const { Telegraf, Markup, Stage, Scenes, session } = require('telegraf')
-const Mongo  = require("@telegraf/session/mongodb");
 const mongoose = require('mongoose')
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -23,6 +22,7 @@ const BriefingAtTheWorkplaceScene = require('./scenes/1.2 Labor Protection Brief
 const InstructionsScene = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/1.2.3.1 Instructions/index.js')
 const TrainingModeScene = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/1.2.3.2 Training Mode/index.js')
 const {NewUserExamScene, ExamScene, NameChangeScene, JobChangeScene} = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/1.2.3.3 Exam/index.js')
+const {AdministrationScene, DeleteResultScene, GuardScene} = require('./scenes/1.5 Administration/index.js')
 
 const OrdersScene = require('./scenes/1.3 Orders/index.js')
 
@@ -49,7 +49,9 @@ const stage = new Scenes.Stage([MainScene, NewStaffScene,
   IntroductoryBriefingScene, JobInstructionsScene,
   BriefingAtTheWorkplaceScene, InstructionsScene, TrainingModeScene, NewUserExamScene, ExamScene, NameChangeScene, JobChangeScene,
   OrdersScene,
-  KaidzenScene, EmptyScene])
+  KaidzenScene,
+  GuardScene, AdministrationScene, DeleteResultScene,
+  EmptyScene,])
 
 
 bot.use(session())
@@ -72,6 +74,8 @@ bot.start((ctx) => {
     counter: 0, 
     score: 0,
     timer: 0,
+    op: false,
+    users: [],
     questions: []
   }
 })

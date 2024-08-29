@@ -9,6 +9,10 @@ const ExamSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    date: {
+        type: Date, 
+        default: new Date()
+    },
     time: Number
 })
 
