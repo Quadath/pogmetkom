@@ -3,8 +3,6 @@ const { Markup, Scenes } = require('telegraf')
 const INSTRUCTIONS = require('../../../../instructions.js')
 const FILES = require('../../../../files.js')
 
-const questions = []
-
 const InstructionsScene = new Scenes.WizardScene("INSTRUCTIONS_SCENE", 
     (ctx) => {
       ctx.reply('Инструкции', Markup
@@ -23,7 +21,9 @@ const InstructionsScene = new Scenes.WizardScene("INSTRUCTIONS_SCENE",
       console.log(index)
       if (index >= 0) {
         const numbers = INSTRUCTIONS[`${ctx.message.text}`];
-        
+        for (num of numbers) {
+          await ctx.sendDocument(FILES[`1.2.3.1.${num}`])
+        }
       }
       else {
         switch(ctx.message.text) {
@@ -32,8 +32,7 @@ const InstructionsScene = new Scenes.WizardScene("INSTRUCTIONS_SCENE",
           default: ctx.scene.enter('MAIN_SCENE')
         }
       }
-    },
-    [...questions]
+    }
   )
 
 module.exports = InstructionsScene
