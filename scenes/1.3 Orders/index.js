@@ -18,26 +18,12 @@ const OrdersScene = new Scenes.WizardScene("ORDERS_SCENE",
     (ctx) => {
       switch(ctx.message.text) {
         case 'Адаптация': {
-            ctx.sendDocument(`${FILES['1.3.1']}`, Markup
-              .keyboard([
-                ['Адаптация'], 
-                ['Повышение разряда'],
-                ['В начало', 'Назад']
-              ])
-              .oneTime()
-              .resize()
-            )
+            ctx.sendDocument(`${FILES['1.3.1']}`)
+            ctx.scene.reenter()
         } break;
         case 'Повышение разряда': {
-            ctx.sendDocument(`${FILES['1.3.2']}`, Markup
-              .keyboard([
-                ['Адаптация'], 
-                ['Повышение разряда'],
-                ['В начало', 'Назад']
-              ])
-              .oneTime()
-              .resize()
-            )
+            ctx.sendDocument(`${FILES['1.3.2']}`)
+            ctx.scene.reenter()
         } break;
         case 'Назад': ctx.scene.enter('MAIN_SCENE'); break;
         case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;

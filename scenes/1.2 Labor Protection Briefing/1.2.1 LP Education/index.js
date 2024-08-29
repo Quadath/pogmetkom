@@ -19,9 +19,11 @@ const LPEducationScene = new Scenes.WizardScene("LP_EDUCATION_SCENE",
       switch(ctx.message.text) {
         case 'Вредные факторы': {
           await ctx.sendDocument(`${FILES["1.2.1.1"]}`)
+          ctx.scene.reenter()
         } break;
         case 'СИЗ': {
-          ctx.scene.enter('EMPTY_SCENE')
+          await ctx.sendDocument(`${FILES["1.2.1.2"]}`)
+          ctx.scene.reenter()
         } break;
         case 'Назад': ctx.scene.enter('LABOR_PROTECTION_SCENE'); break;
         case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;

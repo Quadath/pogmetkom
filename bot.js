@@ -36,7 +36,7 @@ const bot = new Telegraf(process.env.TOKEN)
 bot.launch()
 
 bot.on(async (ctx) => {
-  // console.log(ctx.message)
+  console.log(ctx.message)
   const log = new Logger({...ctx.message})
   await log.save()
   if(ctx.message?.text) {

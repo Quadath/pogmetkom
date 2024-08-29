@@ -18,16 +18,19 @@ const IntroductoryBriefingScene = new Scenes.WizardScene("INTRODUCTORY_BRIEFING_
     (ctx) => {
       switch(ctx.message.text) {
         case 'Общие вопросы ОТ': {
-          ctx.sendVideo(`${FILES['1.2.2.1']}`)
+          ctx.sendDocument(`${FILES['1.2.2.1']}`)
+          ctx.scene.reenter()
         } break;
         case 'ДИ': {
           ctx.scene.enter('JOB_INSTRUCTIONS_SCENE')
         } break;
         case 'Видео': {
           ctx.sendVideo(`${FILES['1.2.2.3']}`)
+          ctx.scene.reenter()
         } break;
         case 'ПВТР': {
           ctx.sendDocument(`${FILES["1.2.2.4"]}`)
+          ctx.scene.reenter()
         } break;
         case 'Назад': ctx.scene.enter('LABOR_PROTECTION_SCENE'); break;
         case 'В начало': ctx.scene.enter('MAIN_SCENE'); break;

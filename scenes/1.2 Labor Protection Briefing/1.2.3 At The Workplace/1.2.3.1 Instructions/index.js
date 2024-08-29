@@ -24,6 +24,7 @@ const InstructionsScene = new Scenes.WizardScene("INSTRUCTIONS_SCENE",
         for (num of numbers) {
           await ctx.sendDocument(FILES[`1.2.3.1.${num}`])
         }
+       ctx.scene.reenter()
       }
       else {
         switch(ctx.message.text) {

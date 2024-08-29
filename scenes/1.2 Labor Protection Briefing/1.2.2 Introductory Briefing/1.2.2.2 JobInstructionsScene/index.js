@@ -18,9 +18,17 @@ const JobInstructionsScene = new Scenes.WizardScene("JOB_INSTRUCTIONS_SCENE",
     },
     (ctx) => {
       const index = names.findIndex((item) => item == ctx.message.text)
-      console.log(index)
       if (index >= 0) {
         ctx.sendDocument(`${FILES[`1.2.3.${index + 1}`]}`)
+        ctx.reply('Должностные инструкции', Markup
+          .keyboard([
+            ['Механик', 'Грузчик', 'Стекольщик'], 
+            ['Сборщик', 'Станочник', 'Сварщик'], 
+            ['В начало', 'Маляр', 'Назад']
+          ])
+          .oneTime()
+          .resize()
+        )
       }
       else {
         switch(ctx.message.text) {
