@@ -14,8 +14,8 @@ const NewUserExamScene = new Scenes.WizardScene("NEW_USER_EXAM_SCENE",
     },
     async (ctx) => {
       if (!ctx.message.text) ctx.scene.reenter()
-        ctx.session.state.user.name = ctx.message.text
-        await UserSchema.findOneAndUpdate({telegramId: ctx.message.from.id}, {name: ctx.message.text}, {upsert: true})
+        ctx.session.state.user.name = ctx.message.text.replaceAll(/[^а-яА-Я']/g, '').substring(0, 96)
+        await UserSchema.findOneAndUpdate({telegramId: ctx.message.from.id}, {name: ctx.message.text.replaceAll(/[^а-яА-Я']/g, '').substring(0, 96)}, {upsert: true})
 
         ctx.reply('Сдача экзамена', Markup
             .keyboard([
@@ -95,6 +95,10 @@ const ExamScene = new Scenes.WizardScene("EXAM_SCENE",
             })   
           }
           if (ctx.session.state.counter >= ctx.session.state.questions.length) {
+            const i = letters.findIndex(item => item == ctx.message.text)
+            if(ctx.session.state.questions[ctx.session.state.counter - 1].answers[i]?.correct) {
+              ctx.session.state.score++
+            }
             const result = parseFloat(ctx.session.state.score/ctx.session.state.questions.length * 100)
             const exam = new ExamSchema({
                 job: ctx.session.state.user.job,
@@ -103,7 +107,7 @@ const ExamScene = new Scenes.WizardScene("EXAM_SCENE",
             })
             await exam.save()
             let message = ``
-            if (result > 90) {
+            if (result >= 90) {
                 message = `Экзамен сдан. Результат: ${result}%\nДолжность: ${ctx.session.state.user.job}\nРаботник: ${ctx.session.state.user.name}\nДата: ${new Date().toISOString().slice(0, 10).split('-').join('.')}`
                 await UserSchema.findOneAndUpdate({telegramId: ctx.message.from.id}, {$push: {exams: exam._id}})
                 ctx.reply(message)

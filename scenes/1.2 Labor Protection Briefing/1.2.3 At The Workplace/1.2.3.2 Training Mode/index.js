@@ -74,7 +74,6 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
         }
 
       }
-      console.log(ctx.session.state)
       if (ctx.session.state.counter < ctx.session.state.questions.length) {
         ctx.reply(`${ctx.session.state.questions[ctx.session.state.counter].text}
           \n${ctx.session.state.questions[ctx.session.state.counter].answers.map((item, index) => `${letters[index]}) ${item.text}`).join('\n\n')}`, {
@@ -87,6 +86,11 @@ const TrainingModeScene = new Scenes.WizardScene("TRAINING_MODE_SCENE",
         })   
       }
       if (ctx.session.state.counter >= ctx.session.state.questions.length) {
+        const i = letters.findIndex(item => item == ctx.message.text)
+        if(ctx.session.state.questions[ctx.session.state.counter - 1].answers[i]?.correct) {
+          ctx.session.state.score++
+          ctx.react('👍')
+        }
         ctx.reply(`Ваш результат ${parseFloat(ctx.session.state.score/ctx.session.state.questions.length * 100).toFixed(2)}%`)
         await new Promise(r => setTimeout(r, 1500))
         return ctx.scene.enter('BRIEFING_AT_THE_WORKPLACE_SCENE')
