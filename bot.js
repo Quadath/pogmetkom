@@ -40,11 +40,11 @@ bot.on(async (ctx) => {
   const log = new Logger({...ctx.message})
   await log.save()
   try {
-    if(ctx.message?.text) {
+    if(ctx.message.text) {
       await MessageSchema.findOneAndUpdate({text: ctx.message.text}, {$inc: {quantity: 1, "times": 1}}, {upsert: true})
     }
   } catch {
-    
+
   }
 })
 
