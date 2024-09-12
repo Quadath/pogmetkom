@@ -23,6 +23,7 @@ const InstructionsScene = require('./scenes/1.2 Labor Protection Briefing/1.2.3 
 const TrainingModeScene = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/1.2.3.2 Training Mode/index.js')
 const {NewUserExamScene, ExamScene, NameChangeScene, JobChangeScene} = require('./scenes/1.2 Labor Protection Briefing/1.2.3 At The Workplace/1.2.3.3 Exam/index.js')
 const {AdministrationScene, DeleteResultScene, GuardScene} = require('./scenes/1.5 Administration/index.js')
+const {asyncErrorHandler} = require('./errorhandler.js')
 
 const OrdersScene = require('./scenes/1.3 Orders/index.js')
 
@@ -38,8 +39,12 @@ bot.launch()
 bot.on(async (ctx) => {
   const log = new Logger({...ctx.message})
   await log.save()
-  if(ctx.message?.text) {
-    await MessageSchema.findOneAndUpdate({text: ctx.message.text}, {$inc: {quantity: 1, "times": 1}}, {upsert: true})
+  try {
+    if(ctx.message?.text) {
+      await MessageSchema.findOneAndUpdate({text: ctx.message.text}, {$inc: {quantity: 1, "times": 1}}, {upsert: true})
+    }
+  } catch {
+    
   }
 })
 
