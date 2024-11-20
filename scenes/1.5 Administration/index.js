@@ -31,7 +31,7 @@ const AdministrationScene = new Scenes.WizardScene("ADMINISTRATION_SCENE",
             const users = (await UserSchema.find({"exams.0": {$exists: true}}).populate('exams').lean()).map(user => {return {...user, exams: [user.exams.sort((a, b) => (a.result < b.result) ? 1: (b.result < a.result) ? -1 : 0)[0]]}})
             ctx.session.state.users = users;
             const result = users.map((user, index) => {
-                return `${index + 1}. ${user.job} ${user.name}\nРезультат: ${user.exams[0].result} Дата: ${new Date().toISOString(user.exams[0].date.getTime()).slice(0, 10).split('-').join('.')}`
+                return `${index + 1}. ${user.job} ${user.name}\nРезультат: ${user.exams[0].result} Дата: ${new Date(user.exams[0].date.getTime()).toISOString().slice(0, 10).split('-').join('.')}`
             }).join('\n')
             ctx.reply(`${result == '' ? 'Результатов пока что нет.' : result}`, Markup
                 .keyboard([
